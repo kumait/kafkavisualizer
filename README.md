@@ -17,3 +17,11 @@ You need Java 11 or newer.
 ```bash
 java -jar kafkavisualizer-1.x.x.jar
 ```
+
+### Linux Display Scaling
+
+On Linux, you might need to use the below command if you are using display scaling.
+
+```bash
+java -Dsun.java2d.uiScale=2 -jar kafkavisualizer-1.x.x.jar
+```
