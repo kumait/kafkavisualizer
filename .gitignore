@@ -1,0 +1,5 @@
+/.idea/
+/kafkavisualizer.iml
+/target/
+/clusters.json
+/dependency-reduced-pom.xml
