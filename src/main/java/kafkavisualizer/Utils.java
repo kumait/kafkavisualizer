@@ -39,7 +39,7 @@ public class Utils {
 
     public static String beautifyJSON(String json) {
         var prettyJSON = json;
-        var gson = new GsonBuilder().setPrettyPrinting().create();
+        var gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
         try {
             var o = gson.fromJson(json, Object.class);
             prettyJSON = gson.toJson(o);
