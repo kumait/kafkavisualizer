@@ -1,6 +1,7 @@
 package kafkavisualizer.details.consumer;
 
 import kafkavisualizer.Utils;
+import kafkavisualizer.XmlPrettyFormatter;
 import kafkavisualizer.details.consumer.actions.ClearAction;
 import kafkavisualizer.details.consumer.actions.StartAction;
 import kafkavisualizer.details.consumer.actions.StopAction;
@@ -9,7 +10,7 @@ import kafkavisualizer.models.Consumer;
 import kafkavisualizer.models.HeaderRow;
 import kafkavisualizer.navigator.actions.EditConsumerAction;
 
-import javax.swing.*;
+import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
@@ -63,6 +64,8 @@ public class ConsumerDetailsController {
         }
     }
 
+    private enum Format {NONE, XML, JSON}
+
     private final ConsumerDetailsPane pane;
     private final StartAction startAction;
     private final StopAction stopAction;
@@ -74,10 +77,15 @@ public class ConsumerDetailsController {
     private final ConsumerModel consumerModel;
     private final HeadersTableModel headersTableModel;
     private final ConsumerTableSelectionListener consumerTableSelectionListener;
+    private final XmlPrettyFormatter xmlPrettyFormatter;
+
+    private Format keyFormat = Format.NONE;
+    private Format valueFormat = Format.NONE;
 
     public ConsumerDetailsController(Cluster cluster, Consumer consumer) {
         this.cluster = cluster;
         this.consumer = consumer;
+        xmlPrettyFormatter = new XmlPrettyFormatter();
         consumerModel = new ConsumerModel(cluster, consumer);
         consumerTableSelectionListener = new ConsumerTableSelectionListener();
         pane = new ConsumerDetailsPane();
@@ -123,15 +131,55 @@ public class ConsumerDetailsController {
 
         columnModel.getColumn(5).setPreferredWidth(300); // value
 
-
         pane.getConsumerEventPane().getValueTextAreaWordWrapCheckBox().addActionListener(e -> {
             var selected = pane.getConsumerEventPane().getValueTextAreaWordWrapCheckBox().isSelected();
             pane.getConsumerEventPane().getValueTextArea().setLineWrap(selected);
             pane.getConsumerEventPane().getValueTextArea().setWrapStyleWord(selected);
         });
 
-        pane.getConsumerEventPane().getValueTextAreaFormatJSONCheckBox().addActionListener(e -> updateConsumerPane());
-        pane.getConsumerEventPane().getKeyTextAreaFormatJSONCheckBox().addActionListener(e -> updateConsumerPane());
+        var valueJsonCheckbox = pane.getConsumerEventPane().getValueTextAreaFormatJSONCheckBox();
+        var valueXmlCheckbox = pane.getConsumerEventPane().getValueTextAreaFormatXMLCheckBox();
+        valueJsonCheckbox.addActionListener(e -> {
+            if (valueJsonCheckbox.isSelected()) {
+                valueFormat = Format.JSON;
+                valueXmlCheckbox.setSelected(false);
+            } else {
+                valueFormat = Format.NONE;
+            }
+            updateConsumerPane();
+        });
+
+        valueXmlCheckbox.addActionListener(e -> {
+            if (valueXmlCheckbox.isSelected()) {
+                valueFormat = Format.XML;
+                valueJsonCheckbox.setSelected(false);
+            } else {
+                valueFormat = Format.NONE;
+            }
+            updateConsumerPane();
+        });
+
+        var keyJsonCheckbox = pane.getConsumerEventPane().getKeyTextAreaFormatJSONCheckBox();
+        var keyXmlCheckbox = pane.getConsumerEventPane().getKeyTextAreaFormatXMLCheckBox();
+        keyJsonCheckbox.addActionListener(e -> {
+            if (keyJsonCheckbox.isSelected()) {
+                keyFormat = Format.JSON;
+                keyXmlCheckbox.setSelected(false);
+            } else {
+                keyFormat = Format.NONE;
+            }
+            updateConsumerPane();
+        });
+
+        keyXmlCheckbox.addActionListener(e -> {
+            if (keyXmlCheckbox.isSelected()) {
+                keyFormat = Format.XML;
+                keyJsonCheckbox.setSelected(false);
+            } else {
+                keyFormat = Format.XML;
+            }
+            updateConsumerPane();
+        });
 
         pane.getConsumerEventPane().getKeyTextAreaWordWrapCheckBox().addActionListener(e -> {
             var selected = pane.getConsumerEventPane().getKeyTextAreaWordWrapCheckBox().isSelected();
@@ -148,26 +196,36 @@ public class ConsumerDetailsController {
             var selectedRow = pane.getTable().getSelectedRow();
             var record = consumerTableModel.getSelectedRecord(selectedRow);
 
-            var formatValueJSON = pane.getConsumerEventPane().getValueTextAreaFormatJSONCheckBox().isSelected();
-            var value = formatValueJSON ? Utils.beautifyJSON(record.value()) : record.value();
+            var value = formatString(valueFormat, record.value());
             pane.getConsumerEventPane().getValueTextArea().setText(value);
 
-            var formatKeyJSON = pane.getConsumerEventPane().getKeyTextAreaFormatJSONCheckBox().isSelected();
-            var key = formatKeyJSON ? Utils.beautifyJSON(record.key()) : record.key();
+            var key = formatString(keyFormat, record.key());
             pane.getConsumerEventPane().getKeyTextArea().setText(key);
 
             headersTableModel.getHeaders().clear();
-            for (var header: record.headers()) {
+            for (var header : record.headers()) {
                 var v = header.value() == null ? null : new String(header.value(), StandardCharsets.UTF_8);
                 headersTableModel.getHeaders().add(new HeaderRow(header.key(), v));
             }
             headersTableModel.fireTableDataChanged();
-
         } else {
             pane.getConsumerEventPane().getValueTextArea().setText("");
             pane.getConsumerEventPane().getKeyTextArea().setText("");
             headersTableModel.getHeaders().clear();
         }
+    }
+
+    private String formatString(Format format, String str) {
+        if (format == Format.XML) {
+            if (xmlPrettyFormatter == null) {
+                return str;
+            } else {
+                return xmlPrettyFormatter.format(str);
+            }
+        } else if (valueFormat == Format.JSON) {
+            return Utils.beautifyJSON(str);
+        }
+        return str;
     }
 
     public void start() {
@@ -181,7 +239,7 @@ public class ConsumerDetailsController {
                     if (selectedRow != -1) {
                         selectedRecord = consumerTableModel.getSelectedRecordIndex(selectedRow);
                     }
-                    for (var record: records) {
+                    for (var record : records) {
                         consumerTableModel.addRecord(record);
                     }
                     consumerTableModel.fireTableDataChanged();
