@@ -15,7 +15,7 @@ public class AboutAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        var message = "Kafka Visualizer 1.0\n" +
+        var message = "Kafka Visualizer 1.1.0\n" +
                 "https://github.com/kumait/kafkavisualizer\n\n" +
                 "This software includes icons from IntelliJ IDEA Community Edition\n" +
                 "Copyright (C) JetBrains s.r.o.\n" +

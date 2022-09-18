@@ -29,13 +29,17 @@ public final class Consumer {
     private String name;
     private List<String> topics;
     private StartFrom startFrom;
+    private Format valueFormat;
+    private Format keyFormat;
 
-    public Consumer(String name, List<String> topics, StartFrom startFrom) {
+    public Consumer(String name, List<String> topics, StartFrom startFrom, Format valueFormat, Format keyFormat) {
         Objects.requireNonNull(topics);
         this.id = UUID.randomUUID().toString();
         this.name = name;
         this.topics = topics;
         this.startFrom = startFrom;
+        this.valueFormat = valueFormat;
+        this.keyFormat = keyFormat;
     }
 
     public String getId() {
@@ -64,6 +68,22 @@ public final class Consumer {
 
     public void setStartFrom(StartFrom startFrom) {
         this.startFrom = startFrom;
+    }
+
+    public Format getKeyFormat() {
+        return keyFormat;
+    }
+
+    public void setKeyFormat(Format keyFormat) {
+        this.keyFormat = keyFormat;
+    }
+
+    public void setValueFormat(Format valueFormat) {
+        this.valueFormat = valueFormat;
+    }
+
+    public Format getValueFormat() {
+        return valueFormat;
     }
 
     @Override

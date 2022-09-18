@@ -1,10 +1,20 @@
 package kafkavisualizer;
 
 import com.google.gson.GsonBuilder;
+import org.xml.sax.InputSource;
 
 import javax.swing.*;
+import javax.xml.XMLConstants;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import java.awt.*;
 import java.io.IOException;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.util.Locale;
 import java.util.Objects;
 
 public class Utils {
@@ -39,7 +49,7 @@ public class Utils {
 
     public static String beautifyJSON(String json) {
         var prettyJSON = json;
-        var gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
+        var gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().serializeNulls().create();
         try {
             var o = gson.fromJson(json, Object.class);
             prettyJSON = gson.toJson(o);
@@ -47,5 +57,26 @@ public class Utils {
             // do nothing
         }
         return prettyJSON;
+    }
+
+    public static String beautifyXML(String xml) {
+        var prettyXML = xml;
+        try {
+            var document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(new InputSource(new StringReader(xml)));
+            var transformerFactory = TransformerFactory.newInstance();
+            transformerFactory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+            transformerFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+            transformerFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
+            var transformer = transformerFactory.newTransformer();
+            var hasDeclaration = xml.trim().toLowerCase(Locale.ROOT).startsWith("<?xml");
+            transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, hasDeclaration ? "no": "yes");
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+            var writer = new StringWriter();
+            transformer.transform(new DOMSource(document), new StreamResult(writer));
+            prettyXML = writer.toString();
+        } catch (Exception ex) {
+            // do nothing
+        }
+        return prettyXML;
     }
 }

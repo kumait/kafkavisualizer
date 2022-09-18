@@ -130,8 +130,8 @@ public class ConsumerDetailsController {
             pane.getConsumerEventPane().getValueTextArea().setWrapStyleWord(selected);
         });
 
-        pane.getConsumerEventPane().getValueTextAreaFormatJSONCheckBox().addActionListener(e -> updateConsumerPane());
-        pane.getConsumerEventPane().getKeyTextAreaFormatJSONCheckBox().addActionListener(e -> updateConsumerPane());
+        pane.getConsumerEventPane().getValueTextAreaFormatCheckBox().addActionListener(e -> updateConsumerPane());
+        pane.getConsumerEventPane().getKeyTextAreaFormatCheckBox().addActionListener(e -> updateConsumerPane());
 
         pane.getConsumerEventPane().getKeyTextAreaWordWrapCheckBox().addActionListener(e -> {
             var selected = pane.getConsumerEventPane().getKeyTextAreaWordWrapCheckBox().isSelected();
@@ -148,16 +148,42 @@ public class ConsumerDetailsController {
             var selectedRow = pane.getTable().getSelectedRow();
             var record = consumerTableModel.getSelectedRecord(selectedRow);
 
-            var formatValueJSON = pane.getConsumerEventPane().getValueTextAreaFormatJSONCheckBox().isSelected();
-            var value = formatValueJSON ? Utils.beautifyJSON(record.value()) : record.value();
+            String value = record.value();
+            if (pane.getConsumerEventPane().getValueTextAreaFormatCheckBox().isSelected()) {
+                switch (consumer.getValueFormat()) {
+                    case JSON:
+                        value = Utils.beautifyJSON(value);
+                        break;
+                    case XML:
+                        value = Utils.beautifyXML(value);
+                        break;
+                    case PLAIN_TEXT:
+                    default:
+                        break;
+                }
+            }
             pane.getConsumerEventPane().getValueTextArea().setText(value);
+            pane.getConsumerEventPane().getValueTextArea().setCaretPosition(0);
 
-            var formatKeyJSON = pane.getConsumerEventPane().getKeyTextAreaFormatJSONCheckBox().isSelected();
-            var key = formatKeyJSON ? Utils.beautifyJSON(record.key()) : record.key();
+            var key = record.key();
+            if (pane.getConsumerEventPane().getKeyTextAreaFormatCheckBox().isSelected()) {
+                switch (consumer.getKeyFormat()) {
+                    case JSON:
+                        key = Utils.beautifyJSON(key);
+                        break;
+                    case XML:
+                        key = Utils.beautifyXML(key);
+                        break;
+                    case PLAIN_TEXT:
+                    default:
+                        break;
+                }
+            }
             pane.getConsumerEventPane().getKeyTextArea().setText(key);
+            pane.getConsumerEventPane().getKeyTextArea().setCaretPosition(0);
 
             headersTableModel.getHeaders().clear();
-            for (var header: record.headers()) {
+            for (var header : record.headers()) {
                 var v = header.value() == null ? null : new String(header.value(), StandardCharsets.UTF_8);
                 headersTableModel.getHeaders().add(new HeaderRow(header.key(), v));
             }
@@ -181,7 +207,7 @@ public class ConsumerDetailsController {
                     if (selectedRow != -1) {
                         selectedRecord = consumerTableModel.getSelectedRecordIndex(selectedRow);
                     }
-                    for (var record: records) {
+                    for (var record : records) {
                         consumerTableModel.addRecord(record);
                     }
                     consumerTableModel.fireTableDataChanged();

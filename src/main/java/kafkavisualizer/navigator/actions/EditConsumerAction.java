@@ -6,6 +6,7 @@ import kafkavisualizer.KafkaClient;
 import kafkavisualizer.Utils;
 import kafkavisualizer.dialog.DialogController;
 import kafkavisualizer.models.Consumer;
+import kafkavisualizer.models.Format;
 import kafkavisualizer.navigator.ConsumerPane;
 import kafkavisualizer.navigator.nodes.ConsumerNode;
 
@@ -25,10 +26,16 @@ public class EditConsumerAction extends AbstractAction {
     public void actionPerformed(ActionEvent e) {
         var controller = App.getAppController().getNavigatorController();
         var consumerPane = new ConsumerPane();
-        var dialogController = new DialogController(App.contentPane(), consumerPane, "New Consumer");
+        var dialogController = new DialogController(App.contentPane(), consumerPane, "Edit Consumer");
 
-        consumerPane.getStartFromComboBox().addItem(Consumer.StartFrom.NOW);
-        consumerPane.getStartFromComboBox().addItem(Consumer.StartFrom.BEGINNING);
+        for (var item: Consumer.StartFrom.values()) {
+            consumerPane.getStartFromComboBox().addItem(item);
+        }
+
+        for (var item: Format.values()) {
+            consumerPane.getValueFormatComboBox().addItem(item);
+            consumerPane.getKeyFormatComboBox().addItem(item);
+        }
 
         var consumerNode = (ConsumerNode)controller.getSelectedNode();
         var consumer = consumerNode.getConsumer();
@@ -36,6 +43,17 @@ public class EditConsumerAction extends AbstractAction {
         consumerPane.getNameTextField().setText(consumer.getName());
         consumerPane.getTopicComboBox().setSelectedItem(consumer.getTopics().get(0));
         consumerPane.getStartFromComboBox().setSelectedItem(consumer.getStartFrom());
+
+        // Backward compatibility
+        if (consumer.getValueFormat() == null) {
+            consumer.setValueFormat(Format.PLAIN_TEXT);
+        }
+        if (consumer.getKeyFormat() == null) {
+            consumer.setKeyFormat(Format.PLAIN_TEXT);
+        }
+
+        consumerPane.getValueFormatComboBox().setSelectedItem(consumer.getValueFormat());
+        consumerPane.getKeyFormatComboBox().setSelectedItem(consumer.getKeyFormat());
 
         KafkaClient.getTopics(controller.getSelectedCluster().getServers(), (topics, e1) -> {
             if (e1 != null) {
@@ -65,6 +83,8 @@ public class EditConsumerAction extends AbstractAction {
             consumer.setName(name);
             consumer.setTopics(List.of(topic.toString()));
             consumer.setStartFrom((Consumer.StartFrom) startFrom);
+            consumer.setValueFormat((Format)consumerPane.getValueFormatComboBox().getSelectedItem());
+            consumer.setKeyFormat((Format)consumerPane.getKeyFormatComboBox().getSelectedItem());
             dialogController.closeDialog();
             controller.getTreeModel().nodeChanged(consumerNode);
 

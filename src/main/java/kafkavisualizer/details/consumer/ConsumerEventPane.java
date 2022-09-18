@@ -12,10 +12,10 @@ public class ConsumerEventPane extends JPanel {
     private final JPanel headersPane;
     private final JTextArea valueTextArea;
     private final JCheckBox valueTextAreaWordWrapCheckBox;
-    private final JCheckBox valueTextAreaFormatJSONCheckBox;
+    private final JCheckBox valueTextAreaFormatCheckBox;
     private final JTextArea keyTextArea;
     private final JCheckBox keyTextAreaWordWrapCheckBox;
-    private final JCheckBox keyTextAreaFormatJSONCheckBox;
+    private final JCheckBox keyTextAreaFormatCheckBox;
     private final JTable headersTable;
 
     public ConsumerEventPane() {
@@ -23,10 +23,10 @@ public class ConsumerEventPane extends JPanel {
         valuePane.setLayout(new BorderLayout());
         var valueToolbar = new JToolBar();
         valueTextAreaWordWrapCheckBox = new JCheckBox("Word Wrap");
-        valueTextAreaFormatJSONCheckBox = new JCheckBox("Format JSON");
+        valueTextAreaFormatCheckBox = new JCheckBox("Format");
         valueToolbar.setBorder(new EmptyBorder(8, 0, 8, 0));
         valueToolbar.add(valueTextAreaWordWrapCheckBox);
-        valueToolbar.add(valueTextAreaFormatJSONCheckBox);
+        valueToolbar.add(valueTextAreaFormatCheckBox);
         valuePane.add(valueToolbar, BorderLayout.NORTH);
         valueTextArea = new JTextArea();
         valueTextArea.setLineWrap(false);
@@ -38,10 +38,10 @@ public class ConsumerEventPane extends JPanel {
         keyPane.setLayout(new BorderLayout());
         var keyToolbar = new JToolBar();
         keyTextAreaWordWrapCheckBox = new JCheckBox("Word Wrap");
-        keyTextAreaFormatJSONCheckBox = new JCheckBox("Format JSON");
+        keyTextAreaFormatCheckBox = new JCheckBox("Format");
         keyToolbar.setBorder(new EmptyBorder(8, 0, 8, 0));
         keyToolbar.add(keyTextAreaWordWrapCheckBox);
-        keyToolbar.add(keyTextAreaFormatJSONCheckBox);
+        keyToolbar.add(keyTextAreaFormatCheckBox);
         keyPane.add(keyToolbar, BorderLayout.NORTH);
         keyTextArea = new JTextArea();
         keyTextArea.setLineWrap(false);
@@ -93,15 +93,15 @@ public class ConsumerEventPane extends JPanel {
         return valueTextAreaWordWrapCheckBox;
     }
 
-    public JCheckBox getValueTextAreaFormatJSONCheckBox() {
-        return valueTextAreaFormatJSONCheckBox;
+    public JCheckBox getValueTextAreaFormatCheckBox() {
+        return valueTextAreaFormatCheckBox;
     }
 
     public JCheckBox getKeyTextAreaWordWrapCheckBox() {
         return keyTextAreaWordWrapCheckBox;
     }
 
-    public JCheckBox getKeyTextAreaFormatJSONCheckBox() {
-        return keyTextAreaFormatJSONCheckBox;
+    public JCheckBox getKeyTextAreaFormatCheckBox() {
+        return keyTextAreaFormatCheckBox;
     }
 }

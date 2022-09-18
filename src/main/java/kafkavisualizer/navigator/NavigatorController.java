@@ -9,6 +9,7 @@ import kafkavisualizer.events.EventBus;
 import kafkavisualizer.events.EventObserver;
 import kafkavisualizer.models.Cluster;
 import kafkavisualizer.models.Consumer;
+import kafkavisualizer.models.Format;
 import kafkavisualizer.models.Producer;
 import kafkavisualizer.navigator.actions.*;
 import kafkavisualizer.navigator.nodes.*;
@@ -88,7 +89,7 @@ public class NavigatorController implements TreeNodeIconSupplier, TreeSelectionL
             return null;
         }
 
-        var cluster = (Cluster)((DefaultMutableTreeNode)clusterNode).getUserObject();
+        var cluster = (Cluster) ((DefaultMutableTreeNode) clusterNode).getUserObject();
         return cluster;
     }
 
@@ -97,7 +98,7 @@ public class NavigatorController implements TreeNodeIconSupplier, TreeSelectionL
         var selection = navigatorPane.getTree().getSelectionPath();
         if (selection != null) {
             var popupMenu = new JPopupMenu();
-            var selectedNode = (DefaultMutableTreeNode)selection.getLastPathComponent();
+            var selectedNode = (DefaultMutableTreeNode) selection.getLastPathComponent();
 
             if (selectedNode instanceof ClustersNode) {
                 popupMenu.add(new JMenuItem(newClusterAction));
@@ -137,7 +138,7 @@ public class NavigatorController implements TreeNodeIconSupplier, TreeSelectionL
             navigatorModel.addCluster(cluster);
             navigatorModel.save();
 
-            var rootNode = (DefaultMutableTreeNode)treeModel.getRoot();
+            var rootNode = (DefaultMutableTreeNode) treeModel.getRoot();
             var clusterNode = new ClusterNode(cluster);
             treeModel.insertNodeInto(clusterNode, rootNode, rootNode.getChildCount());
             navigatorPane.getTree().getSelectionModel().clearSelection();
@@ -159,7 +160,7 @@ public class NavigatorController implements TreeNodeIconSupplier, TreeSelectionL
             cluster.getProducers().add(producer);
             navigatorModel.save();
 
-            var producersNode = (ProducersNode)getSelectedNode();
+            var producersNode = (ProducersNode) getSelectedNode();
             var producerNode = new ProducerNode(producer);
             treeModel.insertNodeInto(producerNode, producersNode, producersNode.getChildCount());
             navigatorPane.getTree().getSelectionModel().clearSelection();
@@ -170,18 +171,18 @@ public class NavigatorController implements TreeNodeIconSupplier, TreeSelectionL
         }
     }
 
-    public void addConsumer(String name, String topic, Consumer.StartFrom startFrom) {
+    public void addConsumer(String name, String topic, Consumer.StartFrom startFrom, Format valueFormat, Format keyFormat) {
         var cluster = getSelectedCluster();
         if (cluster == null) {
             return;
         }
 
         try {
-            var consumer = new Consumer(name, List.of(topic), startFrom);
+            var consumer = new Consumer(name, List.of(topic), startFrom, valueFormat, keyFormat);
             cluster.getConsumers().add(consumer);
             navigatorModel.save();
 
-            var consumersNode = (ConsumersNode)getSelectedNode();
+            var consumersNode = (ConsumersNode) getSelectedNode();
             var consumerNode = new ConsumerNode(consumer);
             treeModel.insertNodeInto(consumerNode, consumersNode, consumersNode.getChildCount());
             navigatorPane.getTree().getSelectionModel().clearSelection();
@@ -196,16 +197,16 @@ public class NavigatorController implements TreeNodeIconSupplier, TreeSelectionL
         try {
             navigatorModel.load();
             var rootNode = new ClustersNode();
-            for (var cluster: navigatorModel.getClusters()) {
+            for (var cluster : navigatorModel.getClusters()) {
                 var clusterNode = new ClusterNode(cluster);
                 rootNode.add(clusterNode);
 
-                for (var producer: cluster.getProducers()) {
+                for (var producer : cluster.getProducers()) {
                     var producerNode = new ProducerNode(producer);
                     clusterNode.getProducersNode().add(producerNode);
                 }
 
-                for (var consumer: cluster.getConsumers()) {
+                for (var consumer : cluster.getConsumers()) {
                     var consumerNode = new ConsumerNode(consumer);
                     clusterNode.getConsumersNode().add(consumerNode);
                 }
@@ -228,7 +229,7 @@ public class NavigatorController implements TreeNodeIconSupplier, TreeSelectionL
         if (selection == null) {
             EventBus.broadcast(Event.NAVIGATOR_SELECTION_CHANGED);
         } else {
-            var selectedNode = (DefaultMutableTreeNode)selection.getLastPathComponent();
+            var selectedNode = (DefaultMutableTreeNode) selection.getLastPathComponent();
             EventBus.broadcast(Event.NAVIGATOR_SELECTION_CHANGED, selectedNode);
         }
     }
@@ -237,7 +238,7 @@ public class NavigatorController implements TreeNodeIconSupplier, TreeSelectionL
     public Icon getTreeNodeIcon(JTree tree, Object value, boolean sel, boolean expanded, boolean leaf, int row, boolean hasFocus) {
         Icon icon = null;
         if (value instanceof DefaultMutableTreeNode) {
-            var node = (DefaultMutableTreeNode)value;
+            var node = (DefaultMutableTreeNode) value;
             if (node instanceof ClusterNode) {
                 icon = CLUSTER_ICON;
             } else if (node instanceof TopicsNode) {
