@@ -34,23 +34,23 @@ public class RemoveAction extends AbstractAction {
         if (selection != null) {
             var selectedNode = (DefaultMutableTreeNode) selection.getLastPathComponent();
             if (selectedNode instanceof ClusterNode) {
-                var clusterNode = (ClusterNode)selectedNode;
-                var cluster = (Cluster)clusterNode.getUserObject();
+                var clusterNode = (ClusterNode) selectedNode;
+                var cluster = (Cluster) clusterNode.getUserObject();
                 App.getAppController().getDetailsController().stopConsumers(cluster);
                 controller.getNavigatorModel().getClusters().remove(cluster);
                 controller.getTreeModel().removeNodeFromParent(selectedNode);
                 EventBus.broadcast(Event.NAVIGATOR_NODE_REMOVED, selectedNode);
             } else if (selectedNode instanceof ProducerNode) {
-                var producerNode = (ProducerNode)selectedNode;
-                var producer = (Producer)producerNode.getUserObject();
+                var producerNode = (ProducerNode) selectedNode;
+                var producer = (Producer) producerNode.getUserObject();
                 var producersNode = (DefaultMutableTreeNode) selectedNode.getParent();
                 var cluster = (Cluster) ((DefaultMutableTreeNode) producersNode.getParent()).getUserObject();
                 cluster.getProducers().remove(producer);
                 controller.getTreeModel().removeNodeFromParent(selectedNode);
                 EventBus.broadcast(Event.NAVIGATOR_NODE_REMOVED, selectedNode);
             } else if (selectedNode instanceof ConsumerNode) {
-                var consumerNode = (ConsumerNode)selectedNode;
-                var consumer = (Consumer)consumerNode.getUserObject();
+                var consumerNode = (ConsumerNode) selectedNode;
+                var consumer = (Consumer) consumerNode.getUserObject();
                 var consumersNode = (DefaultMutableTreeNode) selectedNode.getParent();
                 var cluster = (Cluster) ((DefaultMutableTreeNode) consumersNode.getParent()).getUserObject();
                 cluster.getConsumers().remove(consumer);

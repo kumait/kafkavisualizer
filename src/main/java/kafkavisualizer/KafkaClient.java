@@ -22,7 +22,7 @@ public class KafkaClient {
             var names = admin.listTopics(listTopicsOptions).names().get();
             var topicsMap = admin.describeTopics(names).allTopicNames().get();
             var topics = new ArrayList<TopicInfo>();
-            for (var k: topicsMap.keySet()) {
+            for (var k : topicsMap.keySet()) {
                 topics.add(new TopicInfo(k, topicsMap.get(k).partitions().size()));
             }
             return topics.stream().sorted(Comparator.comparing(TopicInfo::getName)).collect(Collectors.toList());

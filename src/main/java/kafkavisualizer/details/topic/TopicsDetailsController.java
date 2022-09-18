@@ -169,7 +169,6 @@ public class TopicsDetailsController implements EventObserver, ListSelectionList
     }
 
 
-
     @Override
     public void consume(Event event, Object payload) {
 //        if (event == Event.NAVIGATOR_SELECTION_CHANGED && payload instanceof Cluster) {

@@ -10,6 +10,6 @@ public final class ConsumerNode extends DefaultMutableTreeNode {
     }
 
     public Consumer getConsumer() {
-        return (Consumer)userObject;
+        return (Consumer) userObject;
     }
 }

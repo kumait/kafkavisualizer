@@ -96,7 +96,7 @@ public class DetailsController implements EventObserver {
             if (payload instanceof ClustersNode) {
                 showPanel("clusters");
             } else if (payload instanceof ClusterNode) {
-                var cluster = (Cluster)((ClusterNode)payload).getUserObject();
+                var cluster = (Cluster) ((ClusterNode) payload).getUserObject();
                 clusterDetailsController.setCluster(cluster);
                 showPanel("cluster");
             } else if (payload instanceof TopicsNode) {
@@ -106,12 +106,12 @@ public class DetailsController implements EventObserver {
             } else if (payload instanceof ProducersNode) {
                 showPanel("producers");
             } else if (payload instanceof ProducerNode) {
-                var producer = (Producer)((ProducerNode)payload).getUserObject();
+                var producer = (Producer) ((ProducerNode) payload).getUserObject();
                 showProducer(producer);
             } else if (payload instanceof ConsumersNode) {
                 showPanel("consumers");
             } else if (payload instanceof ConsumerNode) {
-                var consumer = (Consumer)((ConsumerNode)payload).getUserObject();
+                var consumer = (Consumer) ((ConsumerNode) payload).getUserObject();
                 showConsumer(consumer);
             } else {
                 showPanel("empty");
@@ -122,10 +122,10 @@ public class DetailsController implements EventObserver {
             } else if (payload instanceof TopicsNode) {
 
             } else if (payload instanceof ProducerNode) {
-                var producer = (Producer)((ProducerNode)payload).getUserObject();
+                var producer = (Producer) ((ProducerNode) payload).getUserObject();
                 producers.remove(producer.getId());
             } else if (payload instanceof ConsumerNode) {
-                var consumer = (Consumer)((ConsumerNode)payload).getUserObject();
+                var consumer = (Consumer) ((ConsumerNode) payload).getUserObject();
                 deleteConsumer(consumer);
             } else {
 
@@ -136,7 +136,7 @@ public class DetailsController implements EventObserver {
     }
 
     public void stopConsumers(Cluster cluster) {
-        for (var id: consumers.keySet()) {
+        for (var id : consumers.keySet()) {
             var controller = consumers.get(id);
             if (cluster == null || cluster == controller.getCluster()) {
                 controller.stop();
@@ -145,7 +145,7 @@ public class DetailsController implements EventObserver {
     }
 
     public void clearConsumers(Cluster cluster) {
-        for (var id: consumers.keySet()) {
+        for (var id : consumers.keySet()) {
             var controller = consumers.get(id);
             if (cluster == null || cluster == controller.getCluster()) {
                 controller.clear();

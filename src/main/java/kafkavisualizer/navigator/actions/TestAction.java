@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 
 public class TestAction extends AbstractAction {
     private Runnable runnable;
+
     public TestAction(String name, Runnable runnable) {
         super(name);
         this.runnable = runnable;

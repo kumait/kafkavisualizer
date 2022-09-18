@@ -146,7 +146,7 @@ public class ProducerDetailsController implements ListSelectionListener {
 
                 var headers = headersTableModel.getHeaders()
                         .stream()
-                        .map(h -> (Header)new RecordHeader(h.getKey(), h.getValue().getBytes(StandardCharsets.UTF_8))).collect(Collectors.toList());
+                        .map(h -> (Header) new RecordHeader(h.getKey(), h.getValue().getBytes(StandardCharsets.UTF_8))).collect(Collectors.toList());
 
                 var record = new ProducerRecord<>(producer.getTopic(), null, key, value, headers);
                 try {

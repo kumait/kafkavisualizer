@@ -36,7 +36,7 @@ public class TopicsPane extends JPanel {
 
         add(toolbar);
 
-        table =  new JTable();
+        table = new JTable();
         add(new JScrollPane(table), "span, grow");
     }
 

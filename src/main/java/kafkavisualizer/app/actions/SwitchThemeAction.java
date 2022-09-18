@@ -46,7 +46,7 @@ public class SwitchThemeAction extends AbstractAction {
                 FlatAnimatedLafChange.hideSnapshotWithAnimation();
                 Config.props().put(Config.KEY_THEME, themeInfo.id);
                 Config.save();
-            } catch( Exception ex ) {
+            } catch (Exception ex) {
                 Utils.showError(controller.getAppFrame(), ex.getMessage());
             }
         });

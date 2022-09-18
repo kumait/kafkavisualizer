@@ -85,7 +85,7 @@ public class ConsumerTableModel extends AbstractTableModel {
     public void setSearchText(String searchText) {
         this.searchText = searchText;
         filteredRecords.clear();
-        for (var record: records) {
+        for (var record : records) {
             if (filterPredicate.test(record)) {
                 filteredRecords.add(record);
             }

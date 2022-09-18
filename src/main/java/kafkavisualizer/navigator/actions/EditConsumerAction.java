@@ -28,16 +28,16 @@ public class EditConsumerAction extends AbstractAction {
         var consumerPane = new ConsumerPane();
         var dialogController = new DialogController(App.contentPane(), consumerPane, "Edit Consumer");
 
-        for (var item: Consumer.StartFrom.values()) {
+        for (var item : Consumer.StartFrom.values()) {
             consumerPane.getStartFromComboBox().addItem(item);
         }
 
-        for (var item: Format.values()) {
+        for (var item : Format.values()) {
             consumerPane.getValueFormatComboBox().addItem(item);
             consumerPane.getKeyFormatComboBox().addItem(item);
         }
 
-        var consumerNode = (ConsumerNode)controller.getSelectedNode();
+        var consumerNode = (ConsumerNode) controller.getSelectedNode();
         var consumer = consumerNode.getConsumer();
 
         consumerPane.getNameTextField().setText(consumer.getName());
@@ -83,8 +83,8 @@ public class EditConsumerAction extends AbstractAction {
             consumer.setName(name);
             consumer.setTopics(List.of(topic.toString()));
             consumer.setStartFrom((Consumer.StartFrom) startFrom);
-            consumer.setValueFormat((Format)consumerPane.getValueFormatComboBox().getSelectedItem());
-            consumer.setKeyFormat((Format)consumerPane.getKeyFormatComboBox().getSelectedItem());
+            consumer.setValueFormat((Format) consumerPane.getValueFormatComboBox().getSelectedItem());
+            consumer.setKeyFormat((Format) consumerPane.getKeyFormatComboBox().getSelectedItem());
             dialogController.closeDialog();
             controller.getTreeModel().nodeChanged(consumerNode);
 
@@ -95,7 +95,6 @@ public class EditConsumerAction extends AbstractAction {
             }
 
         });
-
 
 
         dialogController.addCancelAction(e1 -> dialogController.closeDialog());

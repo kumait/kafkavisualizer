@@ -24,7 +24,7 @@ public class EditProducerAction extends AbstractAction {
         var producerPane = new ProducerPane();
         var dialogController = new DialogController(App.contentPane(), producerPane, "Edit Producer");
 
-        var producerNode = (ProducerNode)controller.getSelectedNode();
+        var producerNode = (ProducerNode) controller.getSelectedNode();
         var producer = producerNode.getProducer();
 
         KafkaClient.getTopics(controller.getSelectedCluster().getServers(), (topics, e1) -> {

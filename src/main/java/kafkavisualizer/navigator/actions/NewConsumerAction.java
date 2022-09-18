@@ -24,11 +24,11 @@ public class NewConsumerAction extends AbstractAction {
         var consumerPane = new ConsumerPane();
         var dialogController = new DialogController(App.contentPane(), consumerPane, "New Consumer");
 
-        for (var item: Consumer.StartFrom.values()) {
+        for (var item : Consumer.StartFrom.values()) {
             consumerPane.getStartFromComboBox().addItem(item);
         }
 
-        for (var item: Format.values()) {
+        for (var item : Format.values()) {
             consumerPane.getValueFormatComboBox().addItem(item);
             consumerPane.getKeyFormatComboBox().addItem(item);
         }

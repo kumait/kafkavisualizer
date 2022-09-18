@@ -16,7 +16,7 @@ public class NavigatorTreeCellRenderer extends DefaultTreeCellRenderer {
 
     @Override
     public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean expanded, boolean leaf, int row, boolean hasFocus) {
-        var label = (JLabel)super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
+        var label = (JLabel) super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
         var icon = treeNodeIconSupplier.getTreeNodeIcon(tree, value, sel, expanded, leaf, row, hasFocus);
         if (icon != null) {
             label.setIcon(icon);

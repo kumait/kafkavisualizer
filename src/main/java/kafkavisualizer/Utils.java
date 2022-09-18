@@ -69,7 +69,7 @@ public class Utils {
             transformerFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
             var transformer = transformerFactory.newTransformer();
             var hasDeclaration = xml.trim().toLowerCase(Locale.ROOT).startsWith("<?xml");
-            transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, hasDeclaration ? "no": "yes");
+            transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, hasDeclaration ? "no" : "yes");
             transformer.setOutputProperty(OutputKeys.INDENT, "yes");
             var writer = new StringWriter();
             transformer.transform(new DOMSource(document), new StreamResult(writer));

@@ -20,7 +20,7 @@ public class DialogController {
 
     public DialogController(Component parent, Container content, String title) {
         this.parent = parent;
-        this.window = parent != null? SwingUtilities.windowForComponent(parent): null;
+        this.window = parent != null ? SwingUtilities.windowForComponent(parent) : null;
         this.content = content;
         this.title = title;
         this.actions = new ArrayList<>();
@@ -30,16 +30,16 @@ public class DialogController {
     private JDialog createDialog() {
         final JDialog dialog;
         if (window instanceof Frame) {
-            dialog = new JDialog((Frame)window, title, true);
+            dialog = new JDialog((Frame) window, title, true);
         } else {
-            dialog = new JDialog((Dialog)window, title, true);
+            dialog = new JDialog((Dialog) window, title, true);
         }
         return dialog;
     }
 
     private void initDialog(JDialog dialog) {
         var actionsPane = new JPanel(new FlowLayout(FlowLayout.TRAILING));
-        for (var action: actions) {
+        for (var action : actions) {
             var button = new JButton(action);
             actionsPane.add(button);
             if (action == defaultAction) {
@@ -104,7 +104,6 @@ public class DialogController {
             });
 
 
-
             dc.addDefaultAction(new DialogAction("OK", null, e -> {
                 applyAction.setEnabled(false);
             }));
@@ -112,8 +111,6 @@ public class DialogController {
             dc.addAction(new DialogAction("Cancel", null, e -> {
                 dc.closeDialog();
             }));
-
-
 
 
             applyAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_A);

@@ -38,7 +38,8 @@ public class NavigatorModel {
         }
 
         var json = Files.readString(FILE_PATH);
-        List<Cluster> loadedClusters = gson.fromJson(json, new TypeToken<List<Cluster>>(){}.getType());
+        List<Cluster> loadedClusters = gson.fromJson(json, new TypeToken<List<Cluster>>() {
+        }.getType());
         clusters.clear();
         clusters.addAll(loadedClusters);
     }

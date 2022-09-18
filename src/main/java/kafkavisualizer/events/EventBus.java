@@ -16,7 +16,7 @@ public class EventBus {
     }
 
     public static void broadcast(Event event, Object payload) {
-        for (var observer: observers) {
+        for (var observer : observers) {
             try {
                 observer.consume(event, payload);
             } catch (Exception ex) {
