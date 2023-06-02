@@ -140,7 +140,7 @@ public class ProducerDetailsController implements ListSelectionListener {
                 }
 
                 var valueText = producerDetailsPane.getProducerEventPane().getValueTextArea().getText();
-                if (keyText != null && valueText.length() > 0) {
+                if (valueText != null && valueText.length() > 0) {
                     value = valueText;
                 }
 
