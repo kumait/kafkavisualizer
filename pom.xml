@@ -65,6 +65,11 @@
             <version>2.1</version>
         </dependency>
         <dependency>
+            <groupId>com.weblookandfeel</groupId>
+            <artifactId>svg-salamander</artifactId>
+            <version>1.1.2.2</version>
+        </dependency>
+        <dependency>
             <groupId>com.miglayout</groupId>
             <artifactId>miglayout-swing</artifactId>
             <version>11.0</version>
@@ -74,9 +79,6 @@
             <artifactId>gson</artifactId>
             <version>2.9.0</version>
         </dependency>
-
-
-
     </dependencies>
 
 </project>

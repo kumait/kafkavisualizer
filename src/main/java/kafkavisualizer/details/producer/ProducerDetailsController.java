@@ -108,12 +108,20 @@ public class ProducerDetailsController implements ListSelectionListener {
         }
     }
 
+    public List<HeaderRow> getHeadersRows() {
+        return headersTableModel.getHeaders();
+    }
+
     public ProducerDetailsPane getProducerDetailsPane() {
         return producerDetailsPane;
     }
 
     public void setProducer(Producer producer) {
         this.producer = producer;
+    }
+    
+    public Producer getProducer() {
+    	return this.producer;
     }
 
     public void send() {
@@ -140,7 +148,7 @@ public class ProducerDetailsController implements ListSelectionListener {
                 }
 
                 var valueText = producerDetailsPane.getProducerEventPane().getValueTextArea().getText();
-                if (keyText != null && valueText.length() > 0) {
+                if (valueText != null && valueText.length() > 0) {
                     value = valueText;
                 }
 
@@ -172,10 +180,22 @@ public class ProducerDetailsController implements ListSelectionListener {
         headersTableModel.fireTableDataChanged();
     }
 
+    public void addHeaders(List<kafkavisualizer.models.Header> headers) {
+        if (headers == null) {
+            return;
+        }
+        for (kafkavisualizer.models.Header header : headers) {
+            headersTableModel.getHeaders().add(new HeaderRow(header.getKey(), header.getValue()));
+        }
+        headersTableModel.fireTableDataChanged();
+    }
+
     public void removeSelectedHeaders() {
         var table = producerDetailsPane.getProducerEventPane().getHeadersTable();
         var selection = table.getSelectedRows();
         headersTableModel.getHeaders().removeAll(Arrays.stream(selection).mapToObj(i -> headersTableModel.getHeaders().get(i)).collect(Collectors.toList()));
         headersTableModel.fireTableDataChanged();
     }
+    
+    
 }
