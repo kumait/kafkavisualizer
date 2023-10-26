@@ -17,6 +17,7 @@ import kafkavisualizer.status.StatusController;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.desktop.AboutEvent;
+import java.awt.event.FocusEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
@@ -35,6 +36,11 @@ public class AppController {
         appFrame.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
+                AppFrame appFrame = (AppFrame) e.getSource();
+                Component focusOwner = appFrame.getFocusOwner();
+                if (focusOwner != null) {
+                    appFrame.dispatchEvent(new FocusEvent(appFrame.getFocusOwner(), FocusEvent.FOCUS_LOST));
+                }
                 EventBus.broadcast(Event.APP_CLOSING);
             }
         });

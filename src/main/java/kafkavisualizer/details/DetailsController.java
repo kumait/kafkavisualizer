@@ -13,17 +13,16 @@ import kafkavisualizer.events.EventBus;
 import kafkavisualizer.events.EventObserver;
 import kafkavisualizer.models.Cluster;
 import kafkavisualizer.models.Consumer;
+import kafkavisualizer.models.Header;
 import kafkavisualizer.models.Producer;
 import kafkavisualizer.navigator.nodes.*;
 
 import java.awt.*;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 public class DetailsController implements EventObserver {
-    private final Set<String> producers;
+    private final Map<String, ProducerDetailsController> producers;
     private final Map<String, ConsumerDetailsController> consumers;
     private final DetailsPane detailsPane;
     private final ClustersDetailsController clustersDetailsController;
@@ -34,7 +33,7 @@ public class DetailsController implements EventObserver {
 
     public DetailsController() {
         EventBus.register(this);
-        producers = new HashSet<>();
+        producers = new HashMap<>();
         consumers = new HashMap<>();
 
         detailsPane = new DetailsPane();
@@ -63,12 +62,29 @@ public class DetailsController implements EventObserver {
         return detailsPane;
     }
 
+    public Producer getProducerByEventComponent(Object eventComponent) {
+        return producers.values().stream()
+            .filter(pdc -> eventComponent.equals(pdc.getProducerDetailsPane().getProducerEventPane().getValueTextArea()) 
+                || eventComponent.equals(pdc.getProducerDetailsPane().getProducerEventPane().getKeyTextArea())
+                || eventComponent.equals(pdc.getProducerDetailsPane().getProducerEventPane().getHeadersTable()))
+            .map(pdc -> pdc.getProducer())
+            .findAny()
+            .get();
+    }
+
+    public ProducerDetailsController getProducerDetailsControllerByProducer(Producer producer) {
+        return producers.get(producer.getId());
+    }
+    
     private void showProducer(Producer producer) {
-        if (!producers.contains(producer.getId())) {
+        if (!producers.containsKey(producer.getId())) {
             var producerDetailsController = new ProducerDetailsController();
             producerDetailsController.setProducer(producer);
+            producerDetailsController.getProducerDetailsPane().getProducerEventPane().getValueTextArea().setText(producer.getValue());
+            producerDetailsController.getProducerDetailsPane().getProducerEventPane().getKeyTextArea().setText(producer.getKey());
+            producerDetailsController.addHeaders(producer.getHeaders());
             detailsPane.add(producerDetailsController.getProducerDetailsPane(), producer.getId());
-            producers.add(producer.getId());
+            producers.put(producer.getId(), producerDetailsController);
         }
         showPanel(producer.getId());
     }

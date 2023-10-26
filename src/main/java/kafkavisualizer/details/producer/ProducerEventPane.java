@@ -1,7 +1,7 @@
 package kafkavisualizer.details.producer;
 
 import kafkavisualizer.Utils;
-
+import kafkavisualizer.details.producer.listeners.ProducerFocusListener;
 import javax.swing.*;
 import java.awt.*;
 
@@ -20,17 +20,19 @@ public class ProducerEventPane extends JPanel {
         valuePane = new JPanel();
         valuePane.setLayout(new BorderLayout());
         valueTextArea = new JTextArea();
+        valueTextArea.setName("valueTextArea");
         valueTextArea.setLineWrap(false);
         valueTextArea.setFont(Utils.getMonoFont());
+        valueTextArea.addFocusListener(new ProducerFocusListener());
         valuePane.add(new JScrollPane(valueTextArea), BorderLayout.CENTER);
-
         keyPane = new JPanel();
         keyPane.setLayout(new BorderLayout());
         keyTextArea = new JTextArea();
+        keyTextArea.setName("keyTextArea");
         keyTextArea.setLineWrap(false);
         keyTextArea.setFont(Utils.getMonoFont());
+        keyTextArea.addFocusListener(new ProducerFocusListener());
         keyPane.add(new JScrollPane(keyTextArea), BorderLayout.CENTER);
-
         headersPane = new JPanel();
         headersPane.setLayout(new BorderLayout());
 
@@ -43,7 +45,9 @@ public class ProducerEventPane extends JPanel {
         headersToolbar.add(removeHeaderButton);
 
         headersTable = new JTable();
+        headersTable.setName("headersTable");
         headersTable.setShowGrid(true);
+        headersTable.addFocusListener(new ProducerFocusListener());
         headersPane.add(headersToolbar, BorderLayout.NORTH);
         headersPane.add(new JScrollPane(headersTable), BorderLayout.CENTER);
 
